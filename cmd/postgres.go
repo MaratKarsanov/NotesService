@@ -52,7 +52,7 @@ func PostgresConnection() (*sql.DB, error) {
 }
 
 func Migrate(config config.AppConfig) error {
-	var connectionString = fmt.Sprintf(
+	var databaseUrl = fmt.Sprintf(
 		"postgres://%s:%s@%s:%s/%s?sslmode=disable",
 		config.Database.User,
 		config.Database.Password,
@@ -61,7 +61,7 @@ func Migrate(config config.AppConfig) error {
 		config.Database.Name)
 	m, err := migrate.New(
 		"file://migrations",
-		connectionString,
+		databaseUrl,
 	)
 	if err != nil {
 		return err
