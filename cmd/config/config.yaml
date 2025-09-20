@@ -1,0 +1,9 @@
+database:
+  POSTGRES_DB: "notes"
+  POSTGRES_USER: "postgres"
+  POSTGRES_PASSWORD: "P@ssw0rd"
+  PORT: 5432
+  HOST: "0.0.0.0"
+
+application:
+  port: 8000
