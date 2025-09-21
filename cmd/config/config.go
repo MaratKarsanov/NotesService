@@ -21,7 +21,8 @@ type DatabaseSection struct {
 }
 
 type AppSection struct {
-	Port string `yaml:"port"`
+	Port   string `yaml:"port"`
+	JWTKey string `yaml:"jwtkey"`
 }
 
 func GetConfig() (*AppConfig, error) {

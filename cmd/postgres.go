@@ -66,7 +66,9 @@ func Migrate(config config.AppConfig) error {
 	if err != nil {
 		return err
 	}
-	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+
+	err = m.Up()
+	if err != nil && err != migrate.ErrNoChange {
 		return err
 	}
 

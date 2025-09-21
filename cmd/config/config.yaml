@@ -7,3 +7,4 @@ database:
 
 application:
   port: 8000
+  jwtkey: "3087af57360ffc934aa8ea8eeebefbe7"

@@ -13,7 +13,7 @@ func NewUsersRepository(db *sql.DB) *UsersRepository {
 	return &UsersRepository{db: db}
 }
 
-func (r *UsersRepository) GetUser(id int) (*User, error) {
+func (r *UsersRepository) GetUserById(id int) (*User, error) {
 	var user User
 	err := r.db.QueryRow(`SELECT * FROM users WHERE id = $1`, id).
 		Scan(&user.Id, &user.Email, &user.HashedPassword, &user.CreatedAt)
@@ -24,12 +24,22 @@ func (r *UsersRepository) GetUser(id int) (*User, error) {
 	return &user, nil
 }
 
-func (r *UsersRepository) CreateUser(email, hashed_password, created_at string) error {
+func (r *UsersRepository) GetUserByEmail(email string) (*User, error) {
+	var user User
+	err := r.db.QueryRow(`SELECT * FROM users WHERE email = $1`, email).
+		Scan(&user.Id, &user.Email, &user.HashedPassword, &user.CreatedAt)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (r *UsersRepository) CreateUser(email, hashed_password string) error {
 	_, err := r.db.Exec(
-		`INSERT INTO users (email, hashed_password, created_at) VALUES ($1, $2, $3)`,
+		`INSERT INTO users (email, hashed_password, created_at) VALUES ($1, $2, NOW())`,
 		email,
-		hashed_password,
-		created_at)
+		hashed_password)
 	if err != nil {
 		return err
 	}
