@@ -2,7 +2,9 @@ package main
 
 import (
 	"NotesService/cmd/config"
+	"NotesService/internal/notes"
 	"NotesService/internal/service"
+	"NotesService/internal/users"
 	"NotesService/pkg/logs"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -25,7 +27,9 @@ func main() {
 		logger.Fatal(err)
 	}
 
-	svc := service.NewService(db, logger)
+	notesDbRepository := notes.NewNotesDbRepository(db)
+	usersDbRepository := users.NewUsersDbRepository(db)
+	svc := service.NewService(logger, notesDbRepository, usersDbRepository)
 
 	router.POST("/login", svc.Login)
 	router.POST("/register", svc.Register)

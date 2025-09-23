@@ -19,23 +19,21 @@ type Service struct {
 	db     *sql.DB
 	logger echo.Logger
 
-	usersRepository *users.UsersRepository
-	notesRepository *notes.NotesRepository
+	usersRepository users.UsersRepository
+	notesRepository notes.NotesRepository
 }
 
-func NewService(db *sql.DB, logger echo.Logger) *Service {
+func NewService(
+	logger echo.Logger,
+	notesRepository notes.NotesRepository,
+	usersRepository users.UsersRepository) *Service {
 	svc := &Service{
-		db:     db,
-		logger: logger,
+		logger:          logger,
+		usersRepository: usersRepository,
+		notesRepository: notesRepository,
 	}
-	svc.initRepositories(db)
 
 	return svc
-}
-
-func (s *Service) initRepositories(db *sql.DB) {
-	s.usersRepository = users.NewUsersRepository(db)
-	s.notesRepository = notes.NewNotesRepository(db)
 }
 
 type Response struct {
