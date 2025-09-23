@@ -47,11 +47,11 @@ func (r *UsersRepository) CreateUser(email, hashed_password string) error {
 	return nil
 }
 
-func (r *UsersRepository) UpdateUser(id int, word, translate string) error {
+func (r *UsersRepository) UpdateUser(id int, email, hashedPassword string) error {
 	res, err := r.db.Exec(
-		`UPDATE ru_en SET title = $1, translation = $2 WHERE id = $3`,
-		word,
-		translate,
+		`UPDATE users SET email = $1, hashed_password = $2 WHERE id = $3`,
+		email,
+		hashedPassword,
 		id)
 	if err != nil {
 		return err

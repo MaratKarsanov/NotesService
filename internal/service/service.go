@@ -1,6 +1,7 @@
 package service
 
 import (
+	"NotesService/internal/notes"
 	"NotesService/internal/users"
 	"database/sql"
 
@@ -19,6 +20,7 @@ type Service struct {
 	logger echo.Logger
 
 	usersRepository *users.UsersRepository
+	notesRepository *notes.NotesRepository
 }
 
 func NewService(db *sql.DB, logger echo.Logger) *Service {
@@ -33,6 +35,7 @@ func NewService(db *sql.DB, logger echo.Logger) *Service {
 
 func (s *Service) initRepositories(db *sql.DB) {
 	s.usersRepository = users.NewUsersRepository(db)
+	s.notesRepository = notes.NewNotesRepository(db)
 }
 
 type Response struct {

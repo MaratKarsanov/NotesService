@@ -34,14 +34,20 @@ func main() {
 	jwtKey := []byte(appConf.App.JWTKey)
 	api.Use(echojwt.WithConfig(echojwt.Config{
 		SigningKey:  jwtKey,
-		TokenLookup: "header:Authorization:Bearer",
+		TokenLookup: "header:Authorization",
 		NewClaimsFunc: func(c echo.Context) jwt.Claims {
 			return new(service.Claims)
 		},
 	}))
 
+	api.GET("/notes", svc.GetUserNotes)
+	api.GET("/note/:id", svc.GetNote)
+	api.POST("/note", svc.CreateNote)
+	api.PUT("/note/:id", svc.UpdateNote)
+	api.DELETE("/note/:id", svc.DeleteNote)
+
 	port := appConf.App.Port
 
-	logger.Info("App starting...")
+	logger.Info("Starting application...")
 	router.Logger.Fatal(router.Start(":" + port))
 }

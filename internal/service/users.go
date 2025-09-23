@@ -15,7 +15,7 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-// localhost:8000/api/login
+// localhost:8000/login
 func (s *Service) Login(c echo.Context) error {
 	email := c.FormValue("email")
 	password := c.FormValue("password")
@@ -45,7 +45,7 @@ func (s *Service) Login(c echo.Context) error {
 	})
 }
 
-// localhost:8000/api/login
+// localhost:8000/register
 func (s *Service) Register(c echo.Context) error {
 	email := c.FormValue("email")
 	password := c.FormValue("password")
@@ -80,11 +80,12 @@ func GenerateJWT(username string) (string, error) {
 
 	jwtKey := []byte(appConf.App.JWTKey)
 
-	expirationTime := time.Now().Add(15 * time.Minute)
+	expirationTime := time.Now().Add(24 * time.Hour)
 
 	claims := &Claims{
 		Username: username,
 		RegisteredClaims: jwt.RegisteredClaims{
+			Subject:   username,
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
