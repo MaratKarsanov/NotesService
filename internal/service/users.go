@@ -3,6 +3,7 @@ package service
 import (
 	"NotesService/cmd/config"
 	"net/http"
+	"net/mail"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -58,6 +59,11 @@ func (s *Service) Register(c echo.Context) error {
 		return c.JSON(s.NewError(UserAlreadyExists))
 	}
 
+	if !IsValidEmail(email) {
+		s.logger.Error("Invalid email")
+		return c.JSON(s.NewError(InvalidParams))
+	}
+
 	hashedPassword, err := bcrypt.GenerateFromPassword(
 		[]byte(password),
 		bcrypt.DefaultCost)
@@ -93,4 +99,9 @@ func GenerateJWT(username string) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString(jwtKey)
+}
+
+func IsValidEmail(email string) bool {
+	_, err := mail.ParseAddress(email)
+	return err == nil
 }
