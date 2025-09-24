@@ -33,6 +33,7 @@ func main() {
 
 	router.POST("/login", svc.Login)
 	router.POST("/register", svc.Register)
+	logger.Info("Authorization routes configured successfully")
 
 	api := router.Group("api")
 	jwtKey := []byte(appConf.App.JWTKey)
@@ -49,6 +50,7 @@ func main() {
 	api.POST("/note", svc.CreateNote)
 	api.PUT("/note/:id", svc.UpdateNote)
 	api.DELETE("/note/:id", svc.DeleteNote)
+	logger.Info("Api routes configured successfully")
 
 	port := appConf.App.Port
 
