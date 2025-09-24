@@ -6,6 +6,7 @@ import (
 	"NotesService/internal/users"
 	"NotesService/pkg/logs"
 	"bytes"
+	"encoding/json"
 	"errors"
 	"net/http"
 	"net/http/httptest"
@@ -236,6 +237,40 @@ func TestDeleteNote_Success(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, rec.Code)
 	assert.Equal(t, "OK", rec.Body.String())
+
+	mockNotes.AssertExpectations(t)
+}
+
+func TestGetNote_Integration(t *testing.T) {
+	// Arrange
+	e := echo.New()
+
+	mockNotes := new(MockNotesRepository)
+	mockUsers := new(MockUsersRepository)
+
+	expectedNote := &notes.Note{Id: 1, Title: "Test title", Body: "Test body"}
+	mockNotes.On("GetNote", 1).Return(expectedNote, nil)
+
+	s := service.NewService(logs.NewLogger(false), mockNotes, mockUsers)
+
+	e.GET("/api/note/:id", s.GetNote)
+
+	req := httptest.NewRequest(http.MethodGet, "/api/note/1", nil)
+	rec := httptest.NewRecorder()
+	e.ServeHTTP(rec, req)
+
+	// Assert
+	assert.Equal(t, http.StatusOK, rec.Code)
+
+	var resp service.Response
+	err := json.Unmarshal(rec.Body.Bytes(), &resp)
+	assert.NoError(t, err)
+
+	noteMap, ok := resp.Object.(map[string]interface{})
+	assert.True(t, ok)
+	assert.Equal(t, float64(1), noteMap["id"])
+	assert.Equal(t, "Test title", noteMap["title"])
+	assert.Equal(t, "Test body", noteMap["body"])
 
 	mockNotes.AssertExpectations(t)
 }
