@@ -30,7 +30,7 @@ func (s *Service) GetNote(c echo.Context) error {
 		return c.JSON(s.NewError(InternalServerError))
 	}
 
-	s.logger.Infof("Note with id %s was given", id)
+	s.logger.Infof("Note with id %d was given", id)
 	return c.JSON(http.StatusOK, Response{Object: note})
 }
 
@@ -57,7 +57,7 @@ func (s *Service) GetUserNotes(c echo.Context) error {
 		return c.JSON(s.NewError(InternalServerError))
 	}
 
-	s.logger.Infof("User %s took his notes", dbUser.Id)
+	s.logger.Infof("User %d took his notes", dbUser.Id)
 	return c.JSON(http.StatusOK, Response{Object: notes})
 }
 
@@ -67,6 +67,7 @@ func (s *Service) CreateNote(c echo.Context) error {
 	err := c.Bind(&note)
 	if err != nil {
 		s.logger.Error(err)
+		s.logger.Debug(note)
 		return c.JSON(s.NewError(InvalidParams))
 	}
 
@@ -132,7 +133,7 @@ func (s *Service) UpdateNote(c echo.Context) error {
 		return c.JSON(s.NewError(InternalServerError))
 	}
 
-	s.logger.Infof("Note with id %s was updated", id)
+	s.logger.Infof("Note with id %d was updated", id)
 	return c.String(http.StatusOK, "OK")
 }
 
@@ -151,6 +152,6 @@ func (s *Service) DeleteNote(c echo.Context) error {
 		return c.JSON(s.NewError(InternalServerError))
 	}
 
-	s.logger.Infof("Note with id %s was deleted", id)
+	s.logger.Infof("Note with id %d was deleted", id)
 	return c.String(http.StatusOK, "OK")
 }

@@ -3,7 +3,6 @@ package service
 import (
 	"NotesService/internal/notes"
 	"NotesService/internal/users"
-	"database/sql"
 
 	"github.com/labstack/echo/v4"
 )
@@ -16,7 +15,6 @@ const (
 )
 
 type Service struct {
-	db     *sql.DB
 	logger echo.Logger
 
 	usersRepository users.UsersRepository
@@ -46,5 +44,9 @@ func (r *Response) Error() string {
 }
 
 func (s *Service) NewError(err string) (int, *Response) {
-	return 400, &Response{ErrorMessage: err}
+	statusCode := 400
+	if err == InternalServerError {
+		statusCode = 500
+	}
+	return statusCode, &Response{ErrorMessage: err}
 }

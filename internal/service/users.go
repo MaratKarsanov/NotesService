@@ -67,6 +67,10 @@ func (s *Service) Register(c echo.Context) error {
 	hashedPassword, err := bcrypt.GenerateFromPassword(
 		[]byte(password),
 		bcrypt.DefaultCost)
+	if err != nil {
+		s.logger.Error(err)
+		return c.JSON(s.NewError(InternalServerError))
+	}
 
 	err = usersRepository.CreateUser(email, string(hashedPassword))
 	if err != nil {
